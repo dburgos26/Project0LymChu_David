@@ -11,7 +11,7 @@ Direcciones = ["front", "right", "left", "back"]
 
 Condicionales = { "facing-p" : [Direcciones], "can-put-p" : [Objetos, "int"], "can-pick-p" : [Objetos, "int"], "can-move-p" : [Cardinalidades], "not": "CasoEspecialCond"}
 
-Metodos = {"defvar" : ["str", "int"], "=": ["str", "int"], "move" : ["int"], "turn" : [Orientaciones], "face" : [Cardinalidades], "put" : [Objetos, "int"], "pick" : [Objetos, "int"],
+Metodos = {"defvar" : ["str", "int"], "=": ["int", "int"], "move" : ["int"], "turn" : [Orientaciones], "face" : [Cardinalidades], "put" : [Objetos, "int"], "pick" : [Objetos, "int"],
                 "move-dir" : ["int" , Direcciones], "run-dirs" : ["listaDirec"], "move-face" : ["int", Cardinalidades], "Skip" : [], "if" : [Condicionales, "CasoEspecial", "CasoEspecial"],
                 "loop" : [Condicionales, "CasoEspecial"], "repeat" : ["int", "CasoEspecial"], "defun" : ["str", "listaStr", "CasoEspecial"]
                 }
@@ -19,7 +19,7 @@ Metodos = {"defvar" : ["str", "int"], "=": ["str", "int"], "move" : ["int"], "tu
 MetodosCreados = {}
 
 # Casos especiales
-# int - numero o variable, CasoEspecialCond - Revisar otra vez condicion, str - Texto, listaDirec una lista de Direcciones, CasoEspecial - Revisar otra vez como metodo, listaStr - Lista de str
+# int - numero o variable, CasoEspecialCond - Revisar otra vez condicion, str - Texto, listaDirec una lista de Direcciones, CasoEspecial - Revisar otra vez como metodo, listaStr - Lista de str,
 
 
 # Contadores
@@ -45,27 +45,55 @@ def revisarLinea(linea):
     buscando = None # Tipo de var que deberia ser 
     comandos = None # lista de los parametros
     contador = 0
+    creandoVar = False
+    
+    for elemento in linea:
 
-    for x in linea:
         
-        if buscando == None: # Revisar que el metodo existe
-            
-            if Metodos.key(x) != None or MetodosCreados.key(x) != None:
-                
-                comandos = metodos[x]
-                buscando = comandos[contador]
+
         
         if buscando != None:# Revisar los argumentos
             
             if type(buscando) != "str": # si no es un caso especial
-                if x not in buscando:
+                if elemento not in buscando:
                     error = True
-            else:
-                a
-                # explicar cada caso especial
+            else: # casos especiales
 
-            contador += 1
-            buscando = comandos[contador] # out of range
+                if buscando == "str":
+
+                    if type(elemento) != "str":
+                        error = True
+                    if creandoVar:
+                        Variables.append(elemento)
+                        creandoVar = False
+
+                if buscando == "int": 
+
+                    if type(elemento) != "int" and buscando not in Variables:
+                        error = True
+
+
+
+        if buscando == None: # Revisar que el metodo existe
+            
+            if Metodos.key(elemento) != None or MetodosCreados.key(elemento) != None:
+                
+                comandos = Metodos[elemento]
+                buscando = comandos[contador]
+
+                if elemento == "defvar":
+                    creandoVar = True
+                if elemento == "run-dirs":
+                    for x in range(len(linea) - 1):
+                        comandos.append(Direcciones)
+            
+
+
+        contador += 1
+        if contador < len(comandos):
+            buscando = comandos[contador]
+        else:
+            error = True # Exceso de parametros
             
 
     return None
@@ -107,7 +135,11 @@ archivo.close()
 
 # =========================================== Ciclo principal ===========================================
 
-if error:
+if contParentesis != 0: # Contador de parentesis
+    error = True
+
+
+if error: # Print final
     print("Se encontro un error")
 else:
     print("No se encontraron errores")
