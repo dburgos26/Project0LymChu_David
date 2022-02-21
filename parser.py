@@ -10,7 +10,7 @@ Direcciones = ["front", "right", "left", "back"]
 
 Condicionales = { "facing-p" : [Direcciones], "can-put-p" : [Objetos, "int"], "can-pick-p" : [Objetos, "int"], "can-move-p" : [Cardinalidades], "not": "CasoEspecial"}
 
-Metodos = {}
+Metodos = {"defvar" : ["str", "int"], "=": ["str", "int"], "move" : ["int"], "turn" : [Orientaciones], "face" : [Cardinalidades], "put" : [Objetos, "int"], "pick" : [Objetos, "int"]}
 
 MetodosCreados = {}
 
@@ -30,6 +30,8 @@ def añadirParentesis(texto):
 
     if contParentesis < 0:
         error = True
+
+# funcion de revision general, caso especial - iniciar otra vez el analisis
 
 # =========================================== Ciclo principal ===========================================
 
