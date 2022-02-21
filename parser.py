@@ -40,17 +40,17 @@ def añadirParentesis(texto):
         error = True
 
 
+
 def revisarLinea(linea):
 
     buscando = None # Tipo de var que deberia ser 
     comandos = None # lista de los parametros
     contador = 0
     creandoVar = False
-    
+
     for elemento in linea:
 
         
-
         
         if buscando != None:# Revisar los argumentos
             
@@ -72,6 +72,25 @@ def revisarLinea(linea):
                     if type(elemento) != "int" and buscando not in Variables:
                         error = True
 
+                if buscando == "listaDirec": 
+                    for x in range(len(linea) - 1):
+                        comandos.append(Direcciones)
+                
+                if buscando == "listaStr": 
+                    for x in range(len(linea) - 2):
+                        comandos.index( 1,"str")
+
+                if buscando == "CasoEspecialCond":
+                    comandos.append(Condicionales)
+
+                if buscando == "CasoEspecial":
+                    if Metodos.key(elemento) != None or MetodosCreados.key(elemento) != None:
+                        listaMom = Metodos[elemento]
+                        for x in range(listaMom):
+                            comandos.index(x+contador, listaMom[x])
+                    else:
+                        error = True
+
 
 
         if buscando == None: # Revisar que el metodo existe
@@ -83,10 +102,7 @@ def revisarLinea(linea):
 
                 if elemento == "defvar":
                     creandoVar = True
-                if elemento == "run-dirs":
-                    for x in range(len(linea) - 1):
-                        comandos.append(Direcciones)
-            
+                    
 
 
         contador += 1
