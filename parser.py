@@ -9,7 +9,7 @@ Direcciones = ["up", "right", "left", "down","front","back"]
 
 # Estructuras
 
-Condicionales = { "facing-p" : [Direcciones], "can-put-p" : [Objetos, "int"], "can-pick-p" : [Objetos, "int"], "can-move-p" : [Cardinalidades], "not": "CasoEspecialCond"}
+Condicionales = { "facing-p" : [Cardinalidades], "can-put-p" : [Objetos, "int"], "can-pick-p" : [Objetos, "int"], "can-move-p" : [Cardinalidades], "not": "CasoEspecialCond"}
 
 Metodos = {"defvar" : ["str", "int"], "=": ["int", "int"], "move" : ["int"], "turn" : [Orientaciones], "face" : [Cardinalidades], "put" : [Objetos, "int"], "pick" : [Objetos, "int"],
                 "move-dir" : ["int" , Direcciones], "run-dirs" : ["listaDirec"], "move-face" : ["int", Cardinalidades], "Skip" : [], "if" : [Condicionales, "CasoEspecial", "CasoEspecial"],
@@ -86,7 +86,7 @@ def revisarLinea(linea):
                         creandoVar = False
 
                 if buscando == "int": 
-                    print('selogroputos')
+                    
                     try:
                         int(elemento)
                         
@@ -110,9 +110,10 @@ def revisarLinea(linea):
                     comandos.append(Condicionales)
 
                 if buscando == "CasoEspecial":
+                    print("elemento 112"+str(elemento))
                     if elemento in Metodos.keys() or elemento in MetodosCreados.keys():
                         listaMom = Metodos[elemento]
-                        for x in range(listaMom):
+                        for x in range(len(listaMom)):
                             comandos.insert(x+contador, listaMom[x])
                     else:
                         error = True
@@ -135,9 +136,12 @@ def revisarLinea(linea):
 
         contador += 1
         try:
+            print("contador = "+str(contador))
+            print((comandos))
+            if comandos != None:
+                if contador <= len(comandos):
+                    buscando = comandos[contador-1]
 
-            if contador <= len(comandos) and len(comandos) != 0:
-                buscando = comandos[contador-1]
         except:
             error = True # Exceso de parametros
             print("error en Exceso de parametross")
