@@ -3,8 +3,8 @@
 Variables = []
 Orientaciones = ["left", "right", "around"]
 Cardinalidades = ["north", "south", "east", "west"]
-Objetos = ["Balloons", "Chips"]
-Direcciones = ["front", "right", "left", "back"]
+Objetos = ["balloons", "chips"]
+Direcciones = ["up", "right", "left", "down","front","back"]
 
 
 # Estructuras
@@ -30,6 +30,10 @@ error = False
 # Funciones
 
 def añadirParentesis(texto):
+    global contParentesis
+    global error
+
+    
 
     if texto == "(":
         contParentesis += 1
@@ -38,39 +42,61 @@ def añadirParentesis(texto):
 
     if contParentesis < 0:
         error = True
+        print("error parentesis")
 
 
 
 def revisarLinea(linea):
+
+    global error
 
     buscando = None # Tipo de var que deberia ser 
     comandos = None # lista de los parametros
     contador = 0
     creandoVar = False
 
-    for elemento in linea:
+    for elemento in linea: 
+
+        print("elemento : "+str(elemento))
 
         
         
         if buscando != None:# Revisar los argumentos
             
-            if type(buscando) != "str": # si no es un caso especial
+            if type(buscando) != str : # si no es un caso especial
                 if elemento not in buscando:
                     error = True
+                    print("error en type(buscando) != str")
+                    print("no se encontro el metodo")
+                    print("buscando :" + str(buscando))
+                    print("comandos :" + str(comandos))
+                    print("tipo del elemento = "+str(type(elemento)))
+                    print("tipo delbuscando  = "+str(type(buscando)))
+
+
             else: # casos especiales
 
                 if buscando == "str":
 
-                    if type(elemento) != "str":
+                    if type(elemento) != str:
                         error = True
+                        print("error en type(elemento) != str")
                     if creandoVar:
                         Variables.append(elemento)
                         creandoVar = False
 
                 if buscando == "int": 
+                    print('selogroputos')
+                    try:
+                        int(elemento)
+                        
+                    except:
+                        if buscando not in Variables:
+                            error = True
+                            print("error en buscando not in Variables")
 
-                    if type(elemento) != "int" and buscando not in Variables:
-                        error = True
+
+                    
 
                 if buscando == "listaDirec": 
                     for x in range(len(linea) - 1):
@@ -78,27 +104,29 @@ def revisarLinea(linea):
                 
                 if buscando == "listaStr": 
                     for x in range(len(linea) - 2):
-                        comandos.index( 1,"str")
+                        comandos.insert( 1,"str")
 
                 if buscando == "CasoEspecialCond":
                     comandos.append(Condicionales)
 
                 if buscando == "CasoEspecial":
-                    if Metodos.key(elemento) != None or MetodosCreados.key(elemento) != None:
+                    if elemento in Metodos.keys() or elemento in MetodosCreados.keys():
                         listaMom = Metodos[elemento]
                         for x in range(listaMom):
-                            comandos.index(x+contador, listaMom[x])
+                            comandos.insert(x+contador, listaMom[x])
                     else:
                         error = True
+                        print("error en CasoEspecial")
+                        
 
 
 
         if buscando == None: # Revisar que el metodo existe
             
-            if Metodos.key(elemento) != None or MetodosCreados.key(elemento) != None:
+            if elemento in Metodos.keys() or elemento in MetodosCreados.keys():
                 
                 comandos = Metodos[elemento]
-                buscando = comandos[contador]
+                
 
                 if elemento == "defvar":
                     creandoVar = True
@@ -106,10 +134,15 @@ def revisarLinea(linea):
 
 
         contador += 1
-        if contador < len(comandos):
-            buscando = comandos[contador]
-        else:
+        try:
+
+            if contador <= len(comandos) and len(comandos) != 0:
+                buscando = comandos[contador-1]
+        except:
             error = True # Exceso de parametros
+            print("error en Exceso de parametross")
+
+        print("se realizo un ciclo")    
             
 
     return None
@@ -146,12 +179,16 @@ while linea != "" and not error:
     revisarLinea(linea)
 
     linea = archivo.readline()
+    print("============================================================================")
+    print("se leyo una liena ")
+    print("============================================================================")
     
 archivo.close()
 
 # =========================================== Ciclo principal ===========================================
 
 if contParentesis != 0: # Contador de parentesis
+    print("error en parentesis")
     error = True
 
 
