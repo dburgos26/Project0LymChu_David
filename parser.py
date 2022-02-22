@@ -22,7 +22,7 @@ MetodosCreados = {}
 # int - numero o variable, CasoEspecialCond - Revisar otra vez condicion, str - Texto, listaDirec una lista de Direcciones, CasoEspecial - Revisar otra vez como metodo, listaStr - Lista de str,
 
 
-# Contadores
+# Contadoressss
 
 contParentesis = 0
 error = False
